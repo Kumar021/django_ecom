@@ -1,0 +1,26 @@
+variant: {{product.variation.count}}
+				{% if product.variation.count > 0 %}
+				 <div class="size">
+				 	<div class="form-group">
+					    <label for="exampleFormControlSelect1">Color</label>
+					    <select class="form-control" id="exampleFormControlSelect1" required="True">
+				 		{% for var in product.variation.all %}
+					      	<option>{{var.color}}</option>
+					     {% endfor %}
+					    </select>
+					  </div>
+				 </div>
+				 {% endif %}
+
+				 {% if product.variation.count > 0 %}
+				 <div class="color">
+				 	<div class="form-group">
+					    <label for="exampleFormControlSelect1">Size</label>
+					    <select class="form-control" id="exampleFormControlSelect1" required="True">
+					      {% for var in product.variation.all %}
+					      	<option value="{{var.size}}">{{var.size}}</option>
+					     {% endfor %}
+					    </select>
+					  </div>
+				</div>
+				 {% endif %}

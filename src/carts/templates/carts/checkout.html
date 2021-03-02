@@ -1,0 +1,127 @@
+{% extends 'base.html' %} 
+
+{% load static %}
+
+
+{% block stylesheet %}
+
+{% endblock %}
+
+
+{% block content %} 
+
+<div class="container mt-5">
+	<br />
+<!-- shipping Address : {{object.shipping_address}} <br />
+{{object.order_id}} -- {{object.cart}} -->
+
+	{% if not billing_profile %}
+		<div class="row text-center">{% csrf_token %} 
+			<div class="col-12 col-md-6">
+				<p class="lead">Login</p>
+				{% include 'accounts/snippets/form.html' with form=login_form next_url=request.build_absolute_uri  %}
+			</div>
+
+			<div class="col-12 col-md-6">
+				<p class="lead">Continue as Guest </p>
+				{{guest_register_url}}
+				{% url 'guest_register' as guest_register_url %}
+				{% include 'accounts/snippets/form.html' with form=guest_form next_url=request.build_absolute_uri action_url=guest_register_url  %}
+			</div>
+			
+		</div>	
+
+
+	{% else %}
+
+
+		{% if not object.shipping_address %}
+		<div class="row">
+			<div class="col-12">
+				<p class="lead">Shipping Address </p>
+				<hr />
+			</div>
+			<div class="col-md-6">
+				
+			{% url 'checkout_shipping_address_create' as checkout_address_create %}
+				{% include 'addresses/form.html' with form=shipping_form next_url=request.build_absolute_uri action_url=checkout_address_create address_type='shipping' %}
+			</div>
+			
+			<div class="col-md-6">
+				{% url 'checkout_address_reuse' as checkout_address_reuse %}
+				{% include 'addresses/prev_addresses.html' with address_qs=address_qs next_url=request.build_absolute_uri address_type='shipping' action_url=checkout_address_reuse %}
+
+				
+			</div>
+
+		</div>
+
+		{% elif  not object.billing_address %}
+		<div class="row">
+			<div class="col-12">
+				<p class="lead">Billing Address </p>
+				<hr />
+			</div>
+			<div class="col-md-6">
+				{% url 'checkout_address_create' as checkout_address_create %}
+				{% include 'addresses/form.html' with form=address_form next_url=request.build_absolute_uri action_url=checkout_address_create address_type='billing' %}
+
+			</div>
+			<div class="col-md-6">
+				{% url 'checkout_address_reuse' as checkout_address_reuse %}
+				{% include 'addresses/prev_addresses.html' with address_qs=address_qs next_url=request.build_absolute_uri address_type='billing' action_url=checkout_address_reuse %}
+				<a href="#">Change Shipping Address </a>
+			</div>
+		</div>
+		
+		{% else %}
+
+	   	 <h1> Finalize Checkout: </h1>
+	   	 <p>Cart Item :{% for product in object.cart.products.all %} {{product}} {% if not forloop.last %}, {% endif %} {% endfor %}</p>
+	   	 <p>Shipping Address : {{object.shipping_address.get_address }} | <a data-toggle="modal" data-target="#shippingModal" href="#">Change Address </a></p>
+	   	 <p>Billing Address: {{object.billing_address.get_address }} | <a href="#">Change Address </a></p>
+		 <p>Cart Total : {{object.cart.total}}</p>
+	    <p>Shipping Total : {{object.shipping_total}}</p>
+	    <p>Order Total : {{object.total}}</p>
+	    <form class="form" method="POST" action="#">
+	    	{% csrf_token %}
+	    	<button type="submit" class="btn btn-success">Proceed To Pay</button>
+	    </form>
+	    {% endif %}									
+
+    {% endif %}
+</div>
+
+<!-- #modal -->
+<!-- Modal -->
+<div class="modal fade" id="shippingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<form action="{% url 'checkout_shipping_address_update' %}" method="POST">
+ 	{% csrf_token %} 
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="shippingModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+  		<input type="hidden" name="address_id" value="{{object.shipping_address.id}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required="True">
+      	<input type="text" name="address_line_1" value="{{object.shipping_address.address_line_1}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required="True">
+      	<input type="text" name="address_line_2" value="{{object.shipping_address.address_line_2}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required="True">
+      	<input type="text" name="city" value="{{object.shipping_address.city}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required="True">
+      	<input type="text" name="state" value="{{object.shipping_address.state}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required="True">
+  		<input type="text" name="country" value="{{object.shipping_address.country}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required="True">
+         
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,26 @@
+not variant size: {{product.size.count}}
+				 {% if product.color.count > 0 %}
+				 <div class="color">
+				 	<div class="form-group">
+					    <label for="exampleFormControlSelect1">ColorNotVarient</label>
+					    <select class="form-control" id="exampleFormControlSelect1" required>
+					    	{% for var in product.color.all %}
+					      	<option value="{{var}}">{{var}}</option>
+					      	{% endfor %}
+					    </select>
+					  </div>
+				</div>
+				 {% endif %}
+
+				  {% if product.size.count > 0 %}
+				 <div class="color">
+				 	<div class="form-group">
+					    <label for="exampleFormControlSelect1">SizeNotVarient</label>
+					    <select class="form-control" id="exampleFormControlSelect1" required="True">
+					    	{% for var in product.size.all %}
+					      		<option value="{{var}}">{{var}}</option>
+					      	{% endfor %}
+					    </select>
+					  </div>
+				</div>
+				 {% endif %}

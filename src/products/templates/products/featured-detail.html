@@ -1,0 +1,26 @@
+{% extends 'base.html' %} 
+
+{% load static %}
+
+
+{% block stylesheet %}
+
+{% endblock %}
+
+
+{% block content %} 
+<div class="container mt-5">
+    <h1>Featured Detail</h1>
+    {{object.detail}} : {{object.description}} 
+    <br />
+    {% if object.image %}
+    <img src="{{object.image.url}}" class="img-fluid" alt="image"/>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+{% endblock %}

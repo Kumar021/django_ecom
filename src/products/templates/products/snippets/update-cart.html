@@ -1,0 +1,34 @@
+<form class="form-product-ajax" method="POST" action="{% url 'carts:update' %}" class="form">
+	 {% csrf_token %}
+    <input type="hidden" name='product_id' value="{{ product.id }}">
+   		{% if in_cart %}
+   			<button type="submit" class="btn btn-link btn-sm" style="padding: 0px; cursor: pointer;">Remove</button>
+   		{% else %}
+   		<span class="submit-span">
+			{% if product in cart.products.all %}b
+			  	In cart <button type="submit" class="btn btn-link">Remove</button>
+			{% else %}
+				<!-- product variation -->
+				{% include 'products/snippets/product-variation.html' with product=object cart=cart %}
+
+				<!-- not product variation -->
+				 {% include 'products/snippets/not-product-variation.html' with product=object cart=cart %}
+				<!-- quantity -->
+				 <div class="quantity">
+				 	<div class="form-group">
+					    <label for="exampleFormControlSelect1">Quantity</label>
+					    <select class="form-control" id="exampleFormControlSelect1" required="True">
+					      	<option value="1" selected>1</option>
+					      	<option value="2" >2</option>
+					      	<option value="3" >3</option>
+					      	<option value="4" >4</option>
+					      	<option value="5" >5</option>
+					      	<option value="6" >6</option>
+					    </select>
+					  </div>
+				</div>
+				<button type="submit"  class="btn btn-success">Add to cart</button>
+			{% endif %}
+		</span>
+		{% endif %}
+</form>

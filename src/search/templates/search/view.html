@@ -1,0 +1,42 @@
+{% extends 'base.html' %} 
+
+{% load static %}
+
+
+{% block stylesheet %}
+
+{% endblock %}
+
+
+{% block content %} 
+<div class="container mt-5">
+    <div class="row">
+    	{% if query %}
+    	<div class="col-12 mt-5">
+    		  Search for <b>{{ query }}</b> 
+    		  <hr/>
+    	</div>
+    	{% endif %}
+
+		 <div class='col-md-4 col-md-8 mx-auto py-5'>
+	           {% include 'search/snippets/search-form.html' %}
+
+	      </div>
+
+	      <div class='col-12'>
+                <hr>
+            </div>
+
+	    {% for obj in object_list %}
+	    <div class="col">
+	    	{% include 'products/snippets/card.html' with instance=obj %}
+	    </div>
+	    {% endfor %}
+	</div>
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+{% endblock %}

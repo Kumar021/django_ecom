@@ -1,0 +1,98 @@
+{% extends 'base.html' %} 
+
+{% load static %}
+
+
+{% block stylesheet %}
+
+{% endblock %}
+
+{% block content %} 
+
+
+<div class="container mt-5">
+    <h1> Cart </h1>
+    {% if cart.products.exists %}
+    <table class="table">
+	  <thead>
+	    <tr>
+	      <th scope="col">#</th>
+	      <th scope="col">Product Name</th>
+	      <th scope="col">Product Price</th>
+	      <th scope="col">Quantity</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  	{% for product in cart.products.all %}
+	    <tr>
+	      <th scope="row">{{ forloop.counter }}</th>
+	      <td><a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+	      	{% include 'products/snippets/update-cart.html' with product=product cart=cart in_cart=True %}
+	      </td>
+	      <td><a href="{% url 'carts:remove-from-cart' slug=product.slug %}"> <i class="fa fa-minus mr-2"></i></a>{{ cart.quantity }}<a href="{% url 'carts:add-to-cart' slug=product.slug %}"><i class="fa fa-plus ml-2"></i></a></td>
+	      <td>{{ product.price }}</td>
+	    </tr>
+	    {% endfor %}
+	    <tr>
+	    	<td colspan="3">
+	    		<form class="coupon_code" method="POST" action="{% url 'carts:coupon' %}">
+	    			{% csrf_token %}
+		    		<input type="text" name="coupon_code", placeholder="coupon code">
+		    		<button type="submit" class="btn btn-info btn small">Apply</button>
+	    		</form>
+	    	</td>
+	     <!--  <td colspan="2"></td> -->
+	      <td><b>subtotal</b>: {{ cart.subtotal }}</td>
+	      <!-- <td><b>subtotal</b>: {{ cart.get_total_item_price }}</td> -->
+	    </tr>
+	    <tr>
+	       <td colspan="3"></td>
+	      <td><b>total</b>: {{ cart.total }}</td>
+	    </tr>
+	      <tr>
+	       <td colspan="3"></td>
+	      <td><a class="btn btn-success btn-small" href="{% url 'carts:checkout' %}">Checkout</a></td>
+	    </tr>
+	  </tbody>
+	</table>
+	{% else %}
+	 <p class="lead">No item in cart!</p>
+	{% endif %}
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<!-- <script type="text/javascript">
+ 	$(document).ready(function(){
+ 		var productForm = $(".coupon_code")
+ 		productForm.submit(function(event){
+ 			event.preventDefault();
+ 			let thisForm = $(this)
+ 			let actionEndpoint = thisForm.attr("action")
+ 			let formData = thisForm.serialize()
+
+ 			$.ajax({
+ 				url:actionEndpoint,
+ 				method: 'POST',
+ 				data: formData,
+
+ 				success: function(data){
+ 					console.log("success");
+ 					let submitSpan = thisForm.find('.submit-span')
+ 					if (data.added){
+ 						submitSpan.html("In cart <button type='submit' class='btn btn-info'>Remove</button>")
+ 					}else{
+ 						submitSpan.html("<button type='submit'  class='btn btn-success'>Add to cart</button>")
+ 					}
+ 					let navbarCartCount = $(".navbar-cart-items")
+ 					navbarCartCount.text(data.cart_items_count)
+ 				},
+ 				error: function(errorData){
+ 					console.log("error");
+ 				}
+ 			})
+ 		})
+ 	})
+ </script> -->
+{% endblock %}
