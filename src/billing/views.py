@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect
 from billing.models import BillingProfile, Card
 
 import stripe 
-stripe.api_key = "sk_test_hoYUDvffq9yzqVxdJ2DIAIpL00v6g5nTrF"
-STRIPE_PUB_KEY = "pk_test_NXwLG0COesMPWGfOENXOfXDR00jVjhPiPA"
+stripe.api_key = "api key"
+STRIPE_PUB_KEY = "publish_key"
 
 
 def payment_method_view(request):
